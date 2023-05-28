@@ -2,7 +2,7 @@ let carts = document.querySelectorAll(".btn-product");
 
 
 let products = [
-    
+
     {
         Name: "Apple",
         tag: "product-1",
@@ -15,7 +15,7 @@ let products = [
         price: 6.77,
         inCart: 0,
     },
-    
+
     {
         Name: "Carrot",
         tag: "product-3",
@@ -80,80 +80,81 @@ let products = [
 
 for (let i = 0; i < carts.length; i++) {
     carts[i].addEventListener("click", () => {
-      cartNumbers(products[i]);
-      totalCost(products[i]);
+        cartNumbers(products[i]);
+        totalCost(products[i]);
     });
-  }
-  
-  // maintain the cart data when page reload
-  
-  function onLoadCartNumbers() {
+}
+
+// maintain the cart data when page reload
+
+function onLoadCartNumbers() {
     let productNumbers = localStorage.getItem("cartNumbers");
-  
+
     if (productNumbers) {
-      document.querySelector(" .icons span a").textContent = productNumbers;
+        document.querySelector(" .icons span a").textContent = productNumbers;
     }
-  }
-  
-  // adding data to local storage when button clicked
-  
-  function cartNumbers(product) {
+}
+
+// adding data to local storage when button clicked
+
+function cartNumbers(product) {
     let productNumbers = localStorage.getItem("cartNumbers");
     productNumbers = parseInt(productNumbers);
-  
+
     if (productNumbers) {
-      localStorage.setItem("cartNumbers", productNumbers + 1);
-      document.querySelector(".icons span a").textContent =
-        productNumbers + 1;
+        localStorage.setItem("cartNumbers", productNumbers + 1);
+        document.querySelector(".icons span a").textContent =
+            productNumbers + 1;
     } else {
-      localStorage.setItem("cartNumbers", 1);
-      document.querySelector(".icons span a").textContent = 1;
+        localStorage.setItem("cartNumbers", 1);
+        document.querySelector(".icons span a").textContent = 1;
     }
     setItems(product);
-  }
-  
-  function setItems(product) {
+}
+
+function setItems(product) {
     let cartItems = localStorage.getItem("productsInCart");
     cartItems = JSON.parse(cartItems);
-  
+
     if (cartItems != null) {
-      if (cartItems[product.tag] == undefined) {
+        if (cartItems[product.tag] == undefined) {
+            cartItems = {
+                ...cartItems,
+                [product.tag]: product,
+            };
+        }
+        cartItems[product.tag].inCart += 1;
+    } else {
+        product.inCart = 1;
         cartItems = {
-          ...cartItems,
-          [product.tag]: product,
+            [product.tag]: product,
         };
-      }
-      cartItems[product.tag].inCart += 1;
-    } else {
-      product.inCart = 1;
-      cartItems = {
-        [product.tag]: product,
-      };
     }
-  
+
     localStorage.setItem("productsInCart", JSON.stringify(cartItems));
-  }
-  function totalCost(product) {
+}
+
+function totalCost(product) {
     let cartCost = localStorage.getItem("totalCost");
-  
+
     if (cartCost != null) {
-      cartCost = parseInt(cartCost);
-      localStorage.setItem("totalCost", cartCost + product.price);
+        cartCost = parseInt(cartCost);
+        localStorage.setItem("totalCost", cartCost + product.price);
     } else {
-      localStorage.setItem("totalCost", product.price);
+        localStorage.setItem("totalCost", product.price);
     }
-  }
-  
-  function displayCart() {
+}
+
+function displayCart() {
     let cartItems = localStorage.getItem("productsInCart");
     cartItems = JSON.parse(cartItems);
     let productContainer = document.querySelector(".display-products");
     let cartCost = localStorage.getItem("totalCost");
-  
+
     if (cartItems && productContainer) {
-      productContainer.innerHTML = "";
-      Object.values(cartItems).map((item) => {
-        productContainer.innerHTML += `
+        productContainer.innerHTML = "";
+        Object.values(cartItems).map((item) => {
+            productContainer.innerHTML += `
   
       <td><i class="fa-solid fa-circle-xmark"></i></td>
       <td><img src="../image/${item.tag}.jpg" alt="image" style="width:30px;">${
@@ -165,8 +166,8 @@ for (let i = 0; i < carts.length; i++) {
       $${(item.inCart * item.price).toFixed(2)}
       </td>
       `;
-      });
-      productContainer.innerHTML += `
+        });
+        productContainer.innerHTML += `
       <div class='basketTotalContainer'>
           <h4 class='basketTotalTitle'>
           Basket Total
@@ -177,18 +178,17 @@ for (let i = 0; i < carts.length; i++) {
         </div>
       `;
     }
-  }
-  
-  function myClick(){
+}
+
+function myClick() {
     alert('Invalid CouponCode')
-  }
-   function myCheckout(){
+}
+
+function myCheckout() {
     alert('Thanks for shopping')
-     localStorage.clear();
-     location.reload();
-   }
-  
-  onLoadCartNumbers();
-  displayCart();
-  
-  
+    localStorage.clear();
+    location.reload();
+}
+
+onLoadCartNumbers();
+displayCart();
